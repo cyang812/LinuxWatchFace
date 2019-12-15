@@ -1,0 +1,12 @@
+# 项目介绍
+
+Linux 命令行样式的表盘
+
+- 正常情况
+![](app/src/main/res/drawable-nodpi/normal.png)
+
+- 待机情况
+![](app/src/main/res/drawable-nodpi/ambient.png)
+
+# 更新历史
+- 2019/12/25 first commit
