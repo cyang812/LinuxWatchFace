@@ -4,7 +4,7 @@ Linux 命令行样式的表盘
 
 灵感来自于这张图片
 
-![](https://github.com/cyang812/LinuxWatchFace/blob/master/raw.png)
+![](https://github.com/cyang812/LinuxWatchFace/blob/master/raw.jpg)
 
 - 正常情况
 
