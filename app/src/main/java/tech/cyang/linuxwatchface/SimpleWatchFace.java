@@ -1,5 +1,9 @@
 package tech.cyang.linuxwatchface;
 
+import static android.content.Context.BATTERY_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.os.BatteryManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,7 +19,7 @@ public class SimpleWatchFace {
     private static final String TIME_FORMAT_WITHOUT_SECONDS = "[TIME] GMT+8 "+"%02d:%02d";
     private static final String TIME_FORMAT_WITH_SECONDS = TIME_FORMAT_WITHOUT_SECONDS + ":%02d";
     private static final String DATE_FORMAT = "[DATE] "+"%04d/%02d/%02d";
-    private static final String BATTERY_FORMAT = "[BATT] "+"[#########.]#%d %%";
+    private static final String BATTERY_FORMAT = "[BATT] "+"[#######.]#%d %%";
     private static final String STEP_FORMAT = "[STEP] "+"%d steps";
     private static final String HEARTRATE_FORMAT = "[L_HR] "+"%d bpm";
     private static final String TITLE_1_FORMAT = "cyang@watch: ~ $ now";
@@ -103,7 +107,7 @@ public class SimpleWatchFace {
         this.time = time;
     }
 
-    public void draw(Canvas canvas, Rect bounds) {
+    public void draw(Canvas canvas, Rect bounds, int batteryLevel) {
         int startX = 30;
         int startY = 100;
         int offsetY = 30;
@@ -123,7 +127,7 @@ public class SimpleWatchFace {
         //String dateText = String.format(DATE_FORMAT, time.year, (time.month + 1), time.monthDay);
         canvas.drawText(dateText, startX, startY+offsetY*2, datePaint);
 
-        String batteryText = String.format(BATTERY_FORMAT, 89);
+        String batteryText = String.format(BATTERY_FORMAT, batteryLevel);
         canvas.drawText(batteryText, startX, startY+offsetY*3, batteryPaint);
 
         String stepText = String.format(STEP_FORMAT, 621);

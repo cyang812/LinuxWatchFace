@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,6 +46,8 @@ public class SimpleWatchFaceService extends CanvasWatchFaceService {
 
         private SimpleWatchFace watchFace;
         private Handler timeTick;
+
+        private BatteryManager batteryManager;
         private GoogleApiClient googleApiClient;
 
         @Override
@@ -62,6 +65,9 @@ public class SimpleWatchFaceService extends CanvasWatchFaceService {
             startTimerIfNecessary();
 
             watchFace = SimpleWatchFace.newInstance(SimpleWatchFaceService.this);
+
+            // Correct usage of getSystemService with BatteryManager.class
+            batteryManager = (BatteryManager) getSystemService(BatteryManager.class);
         }
 
         private void startTimerIfNecessary() {
@@ -124,7 +130,10 @@ public class SimpleWatchFaceService extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             super.onDraw(canvas, bounds);
-            watchFace.draw(canvas, bounds);
+
+            // Get battery percentage
+            int batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+            watchFace.draw(canvas, bounds, batteryLevel);
         }
 
         @Override
