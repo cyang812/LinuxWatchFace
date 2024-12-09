@@ -6,6 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.format.Time;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class SimpleWatchFace {
 
@@ -114,7 +117,10 @@ public class SimpleWatchFace {
         String timeText = String.format(shouldShowSeconds ? TIME_FORMAT_WITH_SECONDS : TIME_FORMAT_WITHOUT_SECONDS, time.hour, time.minute, time.second);
         canvas.drawText(timeText, startX, startY+offsetY*1, timePaint);
 
-        String dateText = String.format(DATE_FORMAT, time.year, (time.month + 1), time.monthDay);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd yyyy", Locale.ENGLISH);
+        LocalDate date = LocalDate.of(time.year, time.month + 1, time.monthDay);
+        String dateText = "[DATE] " + date.format(formatter);
+        //String dateText = String.format(DATE_FORMAT, time.year, (time.month + 1), time.monthDay);
         canvas.drawText(dateText, startX, startY+offsetY*2, datePaint);
 
         String batteryText = String.format(BATTERY_FORMAT, 89);
