@@ -1,5 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LinuxWatchFace</string>
-    <string name="message">Watch face tapped</string>
-    <string name="my_analog_name">My Analog</string>
+    <string name="watch_face_name">Linux Terminal</string>
+    <string name="theme_label">Terminal palette</string>
+    <string name="theme_classic">Classic Linux</string>
+    <string name="theme_matrix">Matrix</string>
+    <string name="theme_pixel">Pixel</string>
+    <string name="steps_label">Steps</string>
+    <string name="heart_rate_label">Heart rate</string>
 </resources>
