@@ -13,7 +13,6 @@ other round Wear OS devices running API 34 or newer.
 - OLED-friendly ambient mode without seconds
 - Date and live watch battery percentage, including a low-battery warning
 - Real step-count and heart-rate complications instead of hard-coded values
-- An editable information row that defaults to the next calendar event
 - Three user-selectable terminal color palettes
 - Editable complication providers in the watch-face editor
 
