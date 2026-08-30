@@ -25,52 +25,52 @@
     </UserConfigurations>
 
     <Scene backgroundColor="#000000">
-        <PartText x="42" y="67" width="366" height="34">
+        <PartText x="55" y="52" width="340" height="30">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <Text>
-                <Font family="SYNC_TO_DEVICE" size="22" color="[CONFIGURATION.theme.5]">
+            <Text align="START">
+                <Font family="monospace" size="18" weight="MEDIUM" color="[CONFIGURATION.theme.5]">
                     <Template><![CDATA[watch@pixel:~ $ status]]></Template>
                 </Font>
             </Text>
         </PartText>
 
-        <PartText x="42" y="111" width="76" height="42">
-            <Text>
-                <Font family="SYNC_TO_DEVICE" size="25" color="[CONFIGURATION.theme.0]">
-                    <Template><![CDATA[[TIME]]]></Template>
+        <PartText x="55" y="95" width="82" height="38">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="19" color="#9AA0A6">
+                    <Template><![CDATA[TIME]]></Template>
                 </Font>
             </Text>
         </PartText>
 
-        <DigitalClock x="122" y="105" width="286" height="51">
+        <DigitalClock x="145" y="84" width="250" height="52">
             <TimeText
                 x="0"
                 y="0"
-                width="286"
-                height="51"
+                width="250"
+                height="52"
                 format="hh:mm:ss"
                 hourFormat="SYNC_TO_DEVICE"
-                alpha="255">
+                align="START">
                 <Variant mode="AMBIENT" target="alpha" value="0" />
-                <Font family="SYNC_TO_DEVICE" size="38" color="[CONFIGURATION.theme.0]" />
-            </TimeText>
-            <TimeText
-                x="0"
-                y="0"
-                width="286"
-                height="51"
-                format="hh:mm"
-                hourFormat="SYNC_TO_DEVICE"
-                alpha="0">
-                <Variant mode="AMBIENT" target="alpha" value="255" />
-                <Font family="SYNC_TO_DEVICE" size="38" weight="LIGHT" color="#FFFFFF" />
+                <Font family="monospace" size="35" weight="MEDIUM" color="[CONFIGURATION.theme.0]" />
             </TimeText>
         </DigitalClock>
 
-        <PartText x="42" y="160" width="366" height="39">
-            <Text>
-                <Font family="SYNC_TO_DEVICE" size="25" color="[CONFIGURATION.theme.1]">
-                    <Template><![CDATA[[DATE] %s %02d/%02d/%04d]]>
+        <PartText x="55" y="143" width="82" height="34">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="19" color="#9AA0A6">
+                    <Template><![CDATA[DATE]]></Template>
+                </Font>
+            </Text>
+        </PartText>
+
+        <PartText x="145" y="143" width="250" height="34">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.1]">
+                    <Template><![CDATA[%s %02d/%02d/%04d]]>
                         <Parameter expression="[DAY_OF_WEEK_S]" />
                         <Parameter expression="[MONTH]" />
                         <Parameter expression="[DAY]" />
@@ -80,15 +80,90 @@
             </Text>
         </PartText>
 
+        <PartText x="55" y="185" width="82" height="34">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="19" color="#9AA0A6">
+                    <Template><![CDATA[BATT]]></Template>
+                </Font>
+            </Text>
+        </PartText>
+
         <Condition>
             <Expressions>
-                <Expression name="batteryLow"><![CDATA[[BATTERY_PERCENT] <= 20]]></Expression>
+                <Expression name="batteryCharging"><![CDATA[[BATTERY_CHARGING_STATUS]]]></Expression>
+                <Expression name="batteryEmpty"><![CDATA[[BATTERY_PERCENT] <= 5]]></Expression>
+                <Expression name="batteryCritical"><![CDATA[[BATTERY_PERCENT] > 5 && [BATTERY_PERCENT] <= 20]]></Expression>
+                <Expression name="batteryLow"><![CDATA[[BATTERY_PERCENT] > 20 && [BATTERY_PERCENT] <= 40]]></Expression>
+                <Expression name="batteryMedium"><![CDATA[[BATTERY_PERCENT] > 40 && [BATTERY_PERCENT] <= 60]]></Expression>
+                <Expression name="batteryGood"><![CDATA[[BATTERY_PERCENT] > 60 && [BATTERY_PERCENT] <= 80]]></Expression>
             </Expressions>
+            <Compare expression="batteryCharging">
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="#00E676">
+                            <Template><![CDATA[[CHG] %d%%]]>
+                                <Parameter expression="[BATTERY_PERCENT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Compare>
+            <Compare expression="batteryEmpty">
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="#FF5252">
+                            <Template><![CDATA[[.....] %d%%]]>
+                                <Parameter expression="[BATTERY_PERCENT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Compare>
+            <Compare expression="batteryCritical">
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="#FF5252">
+                            <Template><![CDATA[[#....] %d%%]]>
+                                <Parameter expression="[BATTERY_PERCENT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Compare>
             <Compare expression="batteryLow">
-                <PartText x="42" y="207" width="366" height="39">
-                    <Text>
-                        <Font family="SYNC_TO_DEVICE" size="25" color="#FF5252">
-                            <Template><![CDATA[[BATT] [LOW.....] %d%%]]>
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="#FF9800">
+                            <Template><![CDATA[[##...] %d%%]]>
+                                <Parameter expression="[BATTERY_PERCENT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Compare>
+            <Compare expression="batteryMedium">
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.2]">
+                            <Template><![CDATA[[###..] %d%%]]>
+                                <Parameter expression="[BATTERY_PERCENT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Compare>
+            <Compare expression="batteryGood">
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.3]">
+                            <Template><![CDATA[[####.] %d%%]]>
                                 <Parameter expression="[BATTERY_PERCENT]" />
                             </Template>
                         </Font>
@@ -96,10 +171,11 @@
                 </PartText>
             </Compare>
             <Default>
-                <PartText x="42" y="207" width="366" height="39">
-                    <Text>
-                        <Font family="SYNC_TO_DEVICE" size="25" color="[CONFIGURATION.theme.2]">
-                            <Template><![CDATA[[BATT] [#######.] %d%%]]>
+                <PartText x="145" y="185" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.3]">
+                            <Template><![CDATA[[#####] %d%%]]>
                                 <Parameter expression="[BATTERY_PERCENT]" />
                             </Template>
                         </Font>
@@ -108,24 +184,33 @@
             </Default>
         </Condition>
 
+        <PartText x="55" y="227" width="82" height="34">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="19" color="#9AA0A6">
+                    <Template><![CDATA[STEP]]></Template>
+                </Font>
+            </Text>
+        </PartText>
+
         <ComplicationSlot
-            x="42"
-            y="254"
-            width="366"
-            height="42"
+            x="145"
+            y="227"
+            width="250"
+            height="34"
             slotId="1"
             displayName="steps_label"
             supportedTypes="SHORT_TEXT EMPTY">
             <DefaultProviderPolicy
                 defaultSystemProvider="STEP_COUNT"
                 defaultSystemProviderType="SHORT_TEXT" />
-            <BoundingBox x="0" y="0" width="366" height="42" />
+            <BoundingBox x="0" y="0" width="250" height="34" />
             <Complication type="SHORT_TEXT">
-                <PartText x="0" y="0" width="366" height="42">
+                <PartText x="0" y="0" width="250" height="34">
                     <Variant mode="AMBIENT" target="alpha" value="0" />
-                    <Text ellipsis="TRUE">
-                        <Font family="SYNC_TO_DEVICE" size="25" color="[CONFIGURATION.theme.3]">
-                            <Template><![CDATA[[STEP] %s]]>
+                    <Text align="START" ellipsis="TRUE">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.3]">
+                            <Template><![CDATA[%s]]>
                                 <Parameter expression="[COMPLICATION.TEXT]" />
                             </Template>
                         </Font>
@@ -134,24 +219,33 @@
             </Complication>
         </ComplicationSlot>
 
+        <PartText x="55" y="269" width="82" height="34">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="19" color="#9AA0A6">
+                    <Template><![CDATA[HEART]]></Template>
+                </Font>
+            </Text>
+        </PartText>
+
         <ComplicationSlot
-            x="42"
-            y="301"
-            width="366"
-            height="42"
+            x="145"
+            y="269"
+            width="250"
+            height="34"
             slotId="2"
             displayName="heart_rate_label"
             supportedTypes="SHORT_TEXT EMPTY">
             <DefaultProviderPolicy
                 defaultSystemProvider="HEART_RATE"
                 defaultSystemProviderType="SHORT_TEXT" />
-            <BoundingBox x="0" y="0" width="366" height="42" />
+            <BoundingBox x="0" y="0" width="250" height="34" />
             <Complication type="SHORT_TEXT">
-                <PartText x="0" y="0" width="366" height="42">
+                <PartText x="0" y="0" width="250" height="34">
                     <Variant mode="AMBIENT" target="alpha" value="0" />
-                    <Text ellipsis="TRUE">
-                        <Font family="SYNC_TO_DEVICE" size="25" color="[CONFIGURATION.theme.4]">
-                            <Template><![CDATA[[L_HR] %s]]>
+                    <Text align="START" ellipsis="TRUE">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.4]">
+                            <Template><![CDATA[%s]]>
                                 <Parameter expression="[COMPLICATION.TEXT]" />
                             </Template>
                         </Font>
@@ -160,11 +254,86 @@
             </Complication>
         </ComplicationSlot>
 
-        <PartText x="42" y="351" width="366" height="39">
+        <PartText x="55" y="311" width="82" height="34">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <Text>
-                <Font family="SYNC_TO_DEVICE" size="25" color="[CONFIGURATION.theme.5]">
+            <Text align="START">
+                <Font family="monospace" size="19" color="#9AA0A6">
+                    <Template><![CDATA[INFO]]></Template>
+                </Font>
+            </Text>
+        </PartText>
+
+        <ComplicationSlot
+            x="145"
+            y="311"
+            width="250"
+            height="34"
+            slotId="3"
+            displayName="info_label"
+            supportedTypes="SHORT_TEXT EMPTY">
+            <DefaultProviderPolicy
+                defaultSystemProvider="NEXT_EVENT"
+                defaultSystemProviderType="SHORT_TEXT" />
+            <BoundingBox x="0" y="0" width="250" height="34" />
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="250" height="34">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Text align="START" ellipsis="TRUE">
+                        <Font family="monospace" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.5]">
+                            <Template><![CDATA[%s]]>
+                                <Parameter expression="[COMPLICATION.TEXT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+        </ComplicationSlot>
+
+        <PartText x="55" y="356" width="340" height="30">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Text align="START">
+                <Font family="monospace" size="18" weight="MEDIUM" color="[CONFIGURATION.theme.5]">
                     <Template><![CDATA[watch@pixel:~ $ _]]></Template>
+                </Font>
+            </Text>
+        </PartText>
+
+        <DigitalClock x="55" y="142" width="340" height="74">
+            <TimeText
+                x="0"
+                y="0"
+                width="340"
+                height="74"
+                format="hh:mm"
+                hourFormat="SYNC_TO_DEVICE"
+                align="CENTER"
+                alpha="0">
+                <Variant mode="AMBIENT" target="alpha" value="255" />
+                <Font family="monospace" size="62" weight="LIGHT" color="#FFFFFF" />
+            </TimeText>
+        </DigitalClock>
+
+        <PartText x="55" y="225" width="340" height="36" alpha="0">
+            <Variant mode="AMBIENT" target="alpha" value="255" />
+            <Text align="CENTER">
+                <Font family="monospace" size="21" weight="LIGHT" color="#FFFFFF">
+                    <Template><![CDATA[%s  %02d/%02d/%04d]]>
+                        <Parameter expression="[DAY_OF_WEEK_S]" />
+                        <Parameter expression="[MONTH]" />
+                        <Parameter expression="[DAY]" />
+                        <Parameter expression="[YEAR]" />
+                    </Template>
+                </Font>
+            </Text>
+        </PartText>
+
+        <PartText x="55" y="270" width="340" height="36" alpha="0">
+            <Variant mode="AMBIENT" target="alpha" value="255" />
+            <Text align="CENTER">
+                <Font family="monospace" size="20" weight="LIGHT" color="#BDBDBD">
+                    <Template><![CDATA[BAT %d%%]]>
+                        <Parameter expression="[BATTERY_PERCENT]" />
+                    </Template>
                 </Font>
             </Text>
         </PartText>

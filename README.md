@@ -13,6 +13,7 @@ other round Wear OS devices running API 34 or newer.
 - OLED-friendly ambient mode without seconds
 - Date and live watch battery percentage, including a low-battery warning
 - Real step-count and heart-rate complications instead of hard-coded values
+- An editable information row that defaults to the next calendar event
 - Three user-selectable terminal color palettes
 - Editable complication providers in the watch-face editor
 
@@ -34,7 +35,8 @@ default system provider does not show data.
 
 4. Open the watch-face picker on the watch and select **Linux Terminal**.
 
-The debug artifact is signed by the workflow's temporary debug key. For
+The workflow runs for every branch push and pull request. Its debug artifact is
+signed by the workflow's temporary debug key. For
 repeatable upgrades without uninstalling, use APKs from tagged GitHub releases,
 which are signed with your persistent release key.
 
@@ -72,10 +74,15 @@ On PowerShell, encode the keystore with:
     Set-Content -NoNewline keystore-base64.txt
 ```
 
-Push a semantic version tag to build a signed APK and attach it to a GitHub
-release:
+Push a semantic version tag to build a signed APK and AAB and attach both to a
+GitHub release:
 
 ```shell
 git tag v2.0.0
 git push origin v2.0.0
 ```
+
+Use the APK for direct installation. The AAB is the artifact to upload to a
+Google Play Console internal testing or production track. Before publishing,
+replace the legacy launcher and preview artwork with final store assets, create
+the Wear OS store listing, and enroll the app in Play App Signing.

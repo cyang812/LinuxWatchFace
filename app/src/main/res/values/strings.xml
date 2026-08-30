@@ -7,4 +7,5 @@
     <string name="theme_pixel">Pixel</string>
     <string name="steps_label">Steps</string>
     <string name="heart_rate_label">Heart rate</string>
+    <string name="info_label">Additional information</string>
 </resources>

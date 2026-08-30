@@ -1,4 +1,4 @@
-name: Release APK
+name: Release APK and AAB
 
 on:
   push:
@@ -31,18 +31,26 @@ jobs:
           test -n "$KEYSTORE_BASE64"
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.jks"
 
-      - name: Build signed release APK
+      - name: Build signed release APK and AAB
         env:
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/release.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --no-daemon
+          VERSION_CODE: ${{ github.run_number }}
+          VERSION_NAME: ${{ github.ref_name }}
+        run: ./gradlew assembleRelease bundleRelease --no-daemon
 
-      - name: Name release APK
-        run: cp app/build/outputs/apk/release/app-release.apk "linux-watch-face-${GITHUB_REF_NAME}.apk"
+      - name: Name release artifacts
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk "linux-watch-face-${GITHUB_REF_NAME}.apk"
+          cp app/build/outputs/bundle/release/app-release.aab "linux-watch-face-${GITHUB_REF_NAME}.aab"
 
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" "linux-watch-face-${GITHUB_REF_NAME}.apk" --generate-notes
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "linux-watch-face-${GITHUB_REF_NAME}.apk" \
+            "linux-watch-face-${GITHUB_REF_NAME}.aab" \
+            --generate-notes
