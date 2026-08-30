@@ -2,7 +2,20 @@ plugins {
     id 'com.android.application'
 }
 
-def releaseKeystorePath = providers.environmentVariable('ANDROID_KEYSTORE_PATH').orNull
+def localSigningProperties = new Properties()
+def localSigningPropertiesFile = new File(
+        new File(System.getProperty('user.home'), '.gradle'),
+        'linux-watch-face-signing.properties'
+)
+if (localSigningPropertiesFile.exists()) {
+    localSigningPropertiesFile.withInputStream { localSigningProperties.load(it) }
+}
+
+def signingValue = { String name ->
+    providers.environmentVariable(name).orNull ?: localSigningProperties.getProperty(name)
+}
+
+def releaseKeystorePath = signingValue('ANDROID_KEYSTORE_PATH')
 def releaseVersionCode = providers.environmentVariable('VERSION_CODE').orElse('2').get().toInteger()
 def releaseVersionName = providers.environmentVariable('VERSION_NAME').orElse('2.0.0').get()
 
@@ -23,9 +36,9 @@ android {
         if (releaseKeystorePath) {
             release {
                 storeFile = file(releaseKeystorePath)
-                storePassword = providers.environmentVariable('ANDROID_KEYSTORE_PASSWORD').get()
-                keyAlias = providers.environmentVariable('ANDROID_KEY_ALIAS').get()
-                keyPassword = providers.environmentVariable('ANDROID_KEY_PASSWORD').get()
+                storePassword = signingValue('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias = signingValue('ANDROID_KEY_ALIAS')
+                keyPassword = signingValue('ANDROID_KEY_PASSWORD')
             }
         }
     }

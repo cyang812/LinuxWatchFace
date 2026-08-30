@@ -23,22 +23,23 @@ default system provider does not show data.
 
 ## Install on a Pixel Watch
 
-1. Download `linux-watch-face-debug` from the latest successful **Build APK**
-   workflow run and extract `app-debug.apk`.
+1. Download `linux-watch-face-signed` from the latest successful **Build APK**
+   workflow run and extract `app-release.apk`.
 2. Enable **Developer options** and **ADB debugging** on the watch.
 3. Connect ADB over Wi-Fi and install the APK:
 
    ```shell
    adb connect WATCH_IP_ADDRESS:PORT
-   adb install -r app-debug.apk
+   adb install -r app-release.apk
    ```
 
 4. Open the watch-face picker on the watch and select **Linux Terminal**.
 
-The workflow runs for every branch push and pull request. Its debug artifact is
-signed by the workflow's temporary debug key. For
-repeatable upgrades without uninstalling, use APKs from tagged GitHub releases,
-which are signed with your persistent release key.
+The workflow runs for every branch push and pull request. APK artifacts from
+branch pushes and tagged GitHub releases use the same persistent signing key,
+so they can update an existing CI installation with `adb install -r`. Pull
+requests are compiled for validation but don't receive access to signing
+secrets.
 
 ## Build locally
 
@@ -55,6 +56,15 @@ On Windows:
 ```
 
 The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+
+To build an APK with the same persistent key as CI, configure
+`~/.gradle/linux-watch-face-signing.properties` and run:
+
+```powershell
+.\gradlew.bat assembleRelease
+```
+
+The signed output is `app/build/outputs/apk/release/app-release.apk`.
 
 ## Configure signed releases
 
