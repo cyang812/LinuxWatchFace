@@ -7,6 +7,18 @@ with no executable code or background service.
 It is designed for the original Pixel Watch on Wear OS 5/5.1 and scales to
 other round Wear OS devices running API 34 or newer.
 
+## Inspiration
+
+The design is based on this original Linux terminal watch-face concept:
+
+![Original Linux terminal watch-face reference](RAW.jpg)
+
+## Preview
+
+| Interactive mode | Always-on display |
+|---|---|
+| <img src="normal.png" width="360" alt="Linux Terminal watch face in interactive mode"> | <img src="ambient.png" width="360" alt="Linux Terminal watch face in always-on display mode"> |
+
 ## Features
 
 - Device-local 12/24-hour time with seconds in interactive mode
