@@ -1,29 +1,59 @@
-apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
-    defaultConfig {
-        applicationId "tech.cyang.linuxwatchface"
-        minSdkVersion 28
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled true
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+plugins {
+    id 'com.android.application'
 }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:wear:26.0.0'
-    implementation 'com.google.android.gms:play-services-wearable:+'
-    implementation 'androidx.wear:wear:1.0.0'
-    implementation 'com.google.android.support:wearable:2.5.0'
-    compileOnly 'com.google.android.wearable:wearable:2.5.0'
+def localSigningProperties = new Properties()
+def localSigningPropertiesFile = new File(
+        new File(System.getProperty('user.home'), '.gradle'),
+        'linux-watch-face-signing.properties'
+)
+if (localSigningPropertiesFile.exists()) {
+    localSigningPropertiesFile.withInputStream { localSigningProperties.load(it) }
+}
+
+def signingValue = { String name ->
+    providers.environmentVariable(name).orNull ?: localSigningProperties.getProperty(name)
+}
+
+def releaseKeystorePath = signingValue('ANDROID_KEYSTORE_PATH')
+def releaseVersionCode = providers.environmentVariable('VERSION_CODE').orElse('2').get().toInteger()
+def releaseVersionName = providers.environmentVariable('VERSION_NAME').orElse('2.0.0').get()
+
+android {
+    namespace = 'tech.cyang.linuxwatchface'
+    compileSdk = 35
+    enableKotlin = false
+
+    defaultConfig {
+        applicationId = 'tech.cyang.linuxwatchface'
+        minSdk = 34
+        targetSdk = 35
+        versionCode = releaseVersionCode
+        versionName = releaseVersionName
+    }
+
+    signingConfigs {
+        if (releaseKeystorePath) {
+            release {
+                storeFile = file(releaseKeystorePath)
+                storePassword = signingValue('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias = signingValue('ANDROID_KEY_ALIAS')
+                keyPassword = signingValue('ANDROID_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled = true
+        }
+        release {
+            minifyEnabled = true
+            shrinkResources = false
+
+            if (releaseKeystorePath) {
+                signingConfig = signingConfigs.release
+            }
+        }
+    }
 }
