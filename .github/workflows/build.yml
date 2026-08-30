@@ -52,4 +52,4 @@ jobs:
           name: linux-watch-face-signed
           path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
